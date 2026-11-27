@@ -1,15 +1,16 @@
-name: Build C OMAR POS
+name: Build C OMAR POS V03
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - 'C_OMAR_POS_5_Devices_Source.zip'
+      - 'C_OMAR_POS_v03_Source.zip'
       - '.github/workflows/blank.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Get project
         uses: actions/checkout@v4
@@ -29,13 +30,21 @@ jobs:
           gradle-version: '8.9'
 
       - name: Extract project
-        run: unzip C_OMAR_POS_5_Devices_Source.zip -d project
+        run: unzip C_OMAR_POS_v03_Source.zip -d project
 
       - name: Build APK
-        run: gradle -p project/C_OMAR_POS_5_Devices assembleDebug
+        run: |
+          BUILD_FILE=$(find project -name gradlew -type f | head -n 1)
+          if [ -z "$BUILD_FILE" ]; then
+            BUILD_FILE=$(find project -name settings.gradle -o -name settings.gradle.kts | head -n 1)
+          fi
+          test -n "$BUILD_FILE"
+          gradle -p "$(dirname "$BUILD_FILE")" assembleDebug
 
       - name: Save APK
         uses: actions/upload-artifact@v4
         with:
-          name: C-OMAR-POS-APK
-          path: project/C_OMAR_POS_5_Devices/app/build/outputs/apk/debug/app-debug.apk
+          name: C-OMAR-POS-V03-APK
+          path: project/**/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          
