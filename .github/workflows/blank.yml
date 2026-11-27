@@ -1,10 +1,10 @@
-name: Build C OMAR POS V03
+name: Build C OMAR POS V04
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - 'C_OMAR_POS_v03_Source.zip'
+      - 'C_OMAR_POS_v04_Source.zip'
       - '.github/workflows/blank.yml'
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
           gradle-version: '8.9'
 
       - name: Extract project
-        run: unzip C_OMAR_POS_v03_Source.zip -d project
+        run: unzip C_OMAR_POS_v04_Source.zip -d project
 
       - name: Build APK
         run: |
@@ -44,7 +44,7 @@ jobs:
       - name: Save APK
         uses: actions/upload-artifact@v4
         with:
-          name: C-OMAR-POS-V03-APK
+          name: C-OMAR-POS-V04-APK
           path: project/**/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           
